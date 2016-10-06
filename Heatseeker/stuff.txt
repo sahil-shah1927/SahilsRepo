@@ -1,0 +1,76 @@
+	<tr class='issue-row' role='button'>
+					<td class='center-text'>response[0].issue_id</td>"
+					<td class='center-text truncate'>response[0].title</td>
+					<td class='truncate'>response[0].user_description</td>
+					<td class='center-text'>response[0].department</td>
+					<td class='center-text'>response[0].date_submitted</td>
+					<td class='center-text'>response[0].date_resolved</td>
+					</tr>
+					<tr class='issue-details'>
+					<td colspan='6'>
+					<div class='issue-details-container center-block'>
+					<h3 class='issue-details-title center-text'>response[0].title</h3>
+					<div class='issue-details-info center-text'>
+					<div class='left-details-info inline-block'>
+					<p>Submitted by:</p>
+					<p>Contact at:</p>
+					<c:if test='${currentIssue.dateResolved != null}'>
+					<p>Date Resolved:</p>
+					</c:if>
+					</div>
+					<div class='right-details-info inline-block'>
+					<p>response[0].submitted_by</p>
+					var temp = 'mailto:'+response[0].email
+					<p>
+					<a href=temp>Here</a>
+					</p>
+					if (response[0].date_resolved != ""){
+					<p>response[0].date_resolved</p>
+					}
+					</div>
+					</div>
+					<div class='center-text'>
+					<u>Details</u>:
+					</div>
+					<div class='issue-details-description center-block'>
+					response[0].user_description</div>
+					<br>
+					<div class='center-text'>
+					<u>Updates</u>:
+					</div>
+					<div class='issue-details-log center-block'>
+					<ul>
+// 					<c:forEach items='${currentIssue.updates}' var='update'>
+// 					<li><span class='message-date'>[${update.updateDate}]</span>
+// 					<strong>${update.submittedBy.username}</strong>: ${update.updateText}</li>
+// 					</c:forEach>
+					</ul>
+					</div>
+					<div class='issue-details-update-container center-text center-block'>
+					<form action='addIssueUpdate' method='POST' class='issue-update-form'>
+					<div class='form-group inline-block vertical-top' style='width:59%'>
+					<input type='hidden' name='issueId' value='response[0].issue_id' />
+					<input class='form-control update-textarea' style='width:100%' placeholder='Add an update..' name='updateText'>
+					</div>
+					<div class='form-group inline-block vertical-top'>
+					<button type='submit' class='center-block btn' name='addUpdate' style='height:200%'>Submit</button>
+					</div>
+					</form>
+					</div>
+					<div class='center-block center-text'>
+					<form action='changeIssueStatus' method='POST' class='issue-details-update-status'>
+					<input type='hidden' name='issueId' value='response[0].issue_id' /> <select class='issue-status-select form-control inline-block' required='required' name='statusToUpdate'>
+					<option value='' disabled selected>Mark As</option>
+					<option value='OPEN'>Open</option>
+					<option value='REJECTED'>Rejected</option>
+					<option value='CLOSED'>Closed</option>
+					<option value='RESOLVED'>Resolved</option>
+					</select>
+					<button type='submit' class='btn inline-block'>Change
+					Status</button>
+					</form>
+					</div>
+					</div>
+					</td>
+					</tr>)
+					

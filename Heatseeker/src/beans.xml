@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+       <context:annotation-config />
+
+	<!-- Bean declarations go here -->
+<!-- 	<bean id="newIssueTracing" class="com.fdmgroup.heatseeker.helperClass.NewIssueTracing"> -->
+<!-- 		<property name="issues"> -->
+<!-- 			<list> -->
+			
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+    <bean id="applicationContextProvider" class="com.fdmgroup.heatseeker.DAOs.ApplicationContextProvider"/>	
+	
+	<bean id="emf" class="javax.persistence.Persistence" factory-method="createEntityManagerFactory">
+		<constructor-arg value="heatseekerjpa"/>
+	</bean>
+	
+	<bean id="abstractDAO" abstract="true" class="com.fdmgroup.heatseeker.DAOs.DAO">
+		<constructor-arg ref="emf"/>
+	</bean>
+	
+	<bean id="issueDAO" class="com.fdmgroup.heatseeker.DAOs.IssueDAO" parent="abstractDAO"/>
+	
+	
+	<bean id="userDAO" class="com.fdmgroup.heatseeker.DAOs.UserDAO" parent="abstractDAO"/>
+		
+	<bean id="departmentDAO" class="com.fdmgroup.heatseeker.DAOs.DepartmentDAO" parent="abstractDAO"/>
+	
+	<bean id="department" class="com.fdmgroup.heatseeker.model.Department" scope="prototype">
+		<property name="deptName" value="default"/>
+		<property name="deptId" value="0"/>
+		<property name="issues">
+			<list>
+			
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="dateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="dd MMM yyyy hh:mm:ss" />
+	</bean>
+	
+	<bean id="issue" class="com.fdmgroup.heatseeker.model.Issue" scope="prototype" >
+		<property name="title" value="title"/>
+		<property name="userDescription" value="userDescription"/>
+		<property name="adminComment" value=""/>
+		<property name="department" ref="department"/>
+		<property name="submittedBy" ref="basicUser"/>
+		<property name="status" value="NEW"/>
+		<property name="priority" value="LOW"/>
+		
+		<property name="updates">
+			<list>
+      			
+   			</list>
+		</property>
+	</bean>
+	
+	<bean id="issueUpdate" class="com.fdmgroup.heatseeker.model.IssueUpdates" scope="prototype">
+		
+		<property name="submittedBy" ref="deptAdmin"/>
+		<property name="updateDate">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="10 Aug 1600 13:14:15" />
+			</bean>
+		</property>
+		<property name="updateText" value=""/>
+	</bean>
+	
+	<bean id="abstractUser" abstract="true" class="com.fdmgroup.heatseeker.model.User">
+		<property name="issues">
+			<list>
+			
+			</list>
+		</property>
+		<property name="dept" ref="department"/>
+		<property name="email" value=""/>
+		<property name="username" value="username"/>
+		<property name="password" value="password"/>
+	</bean>
+		
+	<bean id="basicUser" class="com.fdmgroup.heatseeker.model.BasicUser" parent="abstractUser" scope="prototype"/>
+		
+	<bean id="deptAdmin" class="com.fdmgroup.heatseeker.model.DepartmentAdmin" parent="abstractUser" scope="prototype"/>
+	
+	<bean id="genAdmin" class="com.fdmgroup.heatseeker.model.GeneralAdmin" parent="abstractUser" scope="prototype"/>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+	
+	
+
+</beans>
